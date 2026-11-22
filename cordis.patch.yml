@@ -1,0 +1,4 @@
+# Modal compute guide for DSH agents. Configuration-only host row.
+- insert:
+    - id: modal-guide
+      name: '@qusong/dsh-modal-guide'
