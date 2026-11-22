@@ -1,0 +1,23 @@
+{
+  "name": "@qusong/dsh-modal-guide",
+  "version": "1.0.0",
+  "description": "Teaches the agent how to use Modal serverless compute (CPU/GPU, volumes, sandboxes) correctly from DeepSeek Harness.",
+  "license": "MIT",
+  "type": "module",
+  "keywords": ["modal", "serverless", "gpu", "compute", "guide", "agent"],
+  "exports": {
+    ".": "./index.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "docs",
+    "icon.svg"
+  ],
+  "dsh": {
+    "bundle": { "patch": "./cordis.patch.yml" }
+  }
+}
