@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Modal compute guide",
+    "description": "Adds a short usage guide so the agent uses Modal serverless compute correctly: when GPUs, large memory, or parallel batches are worth it, the safe CLI/volume workflow, and cost rules. Requires the Modal CLI and a logged-in account; adds no tools and handles no credentials. Open Plugins > Modal compute guide for details.",
+    "detail": "docs/DETAIL.md"
+  }
+}
