@@ -1,34 +1,45 @@
-# Modal compute guide for DeepSeek Harness
+# Modal 算力，用对指南
 
-A lightweight DSH plugin that teaches the agent when and how to use [Modal](https://modal.com) serverless compute. It adds no tools, makes no network calls, and handles no credentials — it only injects a concise usage guide into the agent's system prompt, so it is harmless when Modal is not installed.
+> 给它算力之前，先教会它什么时候该用。
 
-## What the agent learns
+给 DeepSeek Harness 的 Agent 装上一段简短的"云端算力常识"。它不新增任何工具，只在需要时提供正确的用法引导——什么时候值得上 GPU、什么时候本地脚本就够了、怎么安全地在云端跑任务。
 
-- **When to use Modal**: GPUs, large-memory jobs, parallel batches, long-running containers — not trivial scripts or web fetches (a local shell is faster and free).
-- **Environment**: `modal` CLI is a Python package (`python -m modal ...`); no local dev mode; network + authenticated account required; never ask the user to paste a token in chat.
-- **Safe workflow**: `modal app list` / `volume list` / `secret list` first; read volumes before writing; pinned image + explicit cpu/memory; `--detach` for long jobs with `modal app logs`.
-- **Integrity**: verify artifacts by content, not exit code; repair data before recomputing if a check fails.
-- **Cost & safety**: billed by compute/GPU wall-clock; smoke-test small; mount shared volumes read-only; write to a new volume/path.
-- **Windows**: strip proxy env vars for Modal's gRPC client; `PYTHONUTF8=1` / `PYTHONIOENCODING=utf-8`.
+## 它解决什么
 
-## Requirements
+接上 Modal 之后，Agent 可能：
 
-- The `modal` CLI installed and the user authenticated in their own terminal. This guide plugin does **not** install Modal or handle credentials.
-- DSH with the `systemPrompt` service (all standard profiles).
+- 抓个网页也起容器，白白烧掉 GPU 时长；
+- 把固定的数据卷当成草稿纸直接覆盖，毁掉源数据；
+- 只看"退出码 0"就宣布成功，忽略产物其实算错了；
+- 一上来就跑全量任务，忘了先小规模冒烟测试。
 
-## Install
+这段引导把这些经验一次性写进它的工作方式里。
 
-In DSH: **Plugins → Add plugin**, point at this repository, or subscribe to a plugin-market index listing `@qusong/dsh-modal-guide`.
+## 它会什么
 
-To install from source with the CLI:
+- **选对场景**：GPU、大内存、并行批处理、长时容器才用 Modal；普通脚本和网页抓取留在本地，更快且不花钱。
+- **安全流程**：先 `modal app list` / `volume list` / `secret list` 看状态；先读后写；固定镜像、显式 cpu/内存；长任务 `--detach` 再收日志。
+- **结果可信**：按内容校验产物，不只看退出码；数据完整性检查没过就先修数据，别在坏数据上重算。
+- **成本与保障**：按运行时长计费，先冒烟再上量；共享卷只读挂载，结果写到新卷或新路径。
+- **Windows 细节**：为 gRPC 去掉代理变量、设 `PYTHONUTF8=1`，避免 GBK 控制台报错。
+
+## 安装前须知（诚实说明）
+
+- 需本机已安装 **`modal` CLI**，并由你自己在终端登录。本插件**不安装** Modal，也**不接触**任何 token。
+- 需要 DSH 的 `systemPrompt` 服务（所有标准 profile 都有）。
+- 本插件**不新增工具、不联网、不改动任何设置**；没装 Modal 时它也完全无害。
+
+## 安装
+
+在 DSH：**插件 → 添加插件**，指向本仓库；或在插件市场里搜索 `zhouhb0321/dsh-modal`。
 
 ```sh
 dsh plugin add https://github.com/zhouhb0321/dsh-modal
 ```
 
-## What changes when enabled / disabled
+## 启用 / 停用会改变什么
 
-Enabled: one short Modal-usage section is added to the agent's system prompt. Disabled: the section disappears; nothing else changes.
+启用：Agent 的系统提示里多一小段 Modal 使用引导。停用：这段引导消失，除此之外没有任何变化。
 
 ## License
 
